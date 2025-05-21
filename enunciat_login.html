@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+
+input[type=submit]  {
+  background-color: #04AA6D;
+  color: white;
+}
+
+.container {
+  background-color: #f1f1f1;
+  padding: 20px;
+}
+
+#message_nom {
+  display:block;
+  background: #f1f1f1;
+  color: #000;
+  position: relative;
+  padding: 10px 10px 10px 50px;
+  margin-top: 5px;
+}
+
+#message_nom p {
+  padding: 5px 25px;
+  font-size: 18px;
+}
+
+#message_passwd {
+  display:block;
+  background: #f1f1f1;
+  color: #000;
+  position: relative;
+  padding: 10px 10px 10px 50px;
+  margin-top: 5px;
+}
+
+#message_passwd p {
+  padding: 5px 25px;
+  font-size: 18px;
+}
+
+.valid {
+  color: green;
+}
+
+.valid:before {
+  position: relative;
+  left: -20px;
+  content: "✔";
+}
+
+.invalid {
+  color: red;
+}
+
+.invalid:before {
+  position: relative;
+  left: -20px;
+  content: "✖";
+}
+</style>
+</head>
+
+<body>
+
+<h3>Validació contrasenya</h3>
+
+
+<form action="enunciat_pelicules.html">
+  <div class="container">
+        <label for="usrname">Nom</label><br>
+        <input type="text" id="usrname" name="usrname" title="Ha de tenir una @" required required><br><br>
+
+        <label for="psw">Contrasenya</label><br>
+        <input type="password" id="psw" name="psw" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Ha de tenir una minúscula, una majúscula, un número i almenys vuit caràcters" required>
+        <br><br>
+        <input type="checkbox" id="mostrar" onclick="mostrarContrasenya()">Mostrar contrasenya
+  </div>      
+
+
+
+  <div id="message_nom">
+      <h3>El nom ha de tenir:</h3>
+      <p id="arroba" class="invalid">Una @</p>    
+  </div>
+
+  <div id="message_passwd">
+      <h3>La contrasenya ha de tenir:</h3>
+      <p id="letter" class="invalid">Una lletra <b>minúscula</b></p>
+      <p id="capital" class="invalid">Una lletra <b>majúscula</b></p>
+      <p id="number" class="invalid">Un <b>número</b></p>
+      <p id="length" class="invalid">Mínim <b>8 caràcters</b></p>
+  </div>
+  
+  <br><br><input type="submit" value="Enviar" id="botonSubmit">
+</form>
+
+
+
+<script>
+/////////////////////// Fiqueu el vostre codi aquí ////////////////////////
+
+// Mostrar o amagar la contrasenya
+    function mostrarContrasenya() {
+      var x = document.getElementById("psw");
+      x.type = (x.type === "password") ? "text" : "password";
+    }
+
+    // VALIDACIÓ NOM
+    var inputNom = document.getElementById("usrname");
+    var arroba = document.getElementById("arroba");
+
+   // Mostrar sempre mentre s'escriu
+    document.getElementById("message_nom").style.display = "block";
+
+    inputNom.onkeyup = function () {
+    var hasAt = /@/;
+    if (inputNom.value.match(hasAt)) {
+        arroba.classList.remove("invalid");
+        arroba.classList.add("valid");
+    } else {
+        arroba.classList.remove("valid");
+        arroba.classList.add("invalid");
+    }
+    }
+
+    // Amagar només si tot és correcte quan se surt del camp
+    inputNom.onblur = function () {
+    var hasAt = /@/;
+    if (inputNom.value.match(hasAt)) {
+        document.getElementById("message_nom").style.display = "none";
+    } else {
+        document.getElementById("message_nom").style.display = "block";
+    }
+    }
+
+
+    // VALIDACIÓ CONTRASENYA
+    var inputPsw = document.getElementById("psw");
+    var letter = document.getElementById("letter");
+    var capital = document.getElementById("capital");
+    var number = document.getElementById("number");
+    var length = document.getElementById("length");
+
+    // Mostrar sempre les instruccions mentre s'escriu
+    document.getElementById("message_passwd").style.display = "block";
+
+    inputPsw.onkeyup = function () {
+    var lowerCaseLetters = /[a-z]/g;
+    var upperCaseLetters = /[A-Z]/g;
+    var numbers = /[0-9]/g;
+
+    var isValid = true;
+    // Validar lletra minúscula
+    if (inputPsw.value.match(lowerCaseLetters)) {
+        letter.classList.remove("invalid");
+        letter.classList.add("valid");
+    } else {
+        letter.classList.remove("valid");
+        letter.classList.add("invalid");
+        isValid = false;
+    }
+    // Validar lletra majúscula
+    if (inputPsw.value.match(upperCaseLetters)) {
+        capital.classList.remove("invalid");
+        capital.classList.add("valid");
+    } else {
+        capital.classList.remove("valid");
+        capital.classList.add("invalid");
+        isValid = false;
+    }
+    // Validar número
+    if (inputPsw.value.match(numbers)) {
+        number.classList.remove("invalid");
+        number.classList.add("valid");
+    } else {
+        number.classList.remove("valid");
+        number.classList.add("invalid");
+        isValid = false;
+    }
+    // Validar longitud
+    if (inputPsw.value.length >= 8) {
+        length.classList.remove("invalid");
+        length.classList.add("valid");
+    } else {
+        length.classList.remove("valid");
+        length.classList.add("invalid");
+        isValid = false;
+    }
+    }
+
+    // Amagar el missatge quan se surt del camp i tot és correcte
+    inputPsw.onblur = function () {
+    var isAllValid = 
+        letter.classList.contains("valid") &&
+        capital.classList.contains("valid") &&
+        number.classList.contains("valid") &&
+        length.classList.contains("valid");
+
+    if (isAllValid) {
+        document.getElementById("message_passwd").style.display = "none";
+    } else {
+        document.getElementById("message_passwd").style.display = "block";
+    }
+    }
+
+
+
+///////////////////////////////////////////////////////////////////////////
+</script>
+
+</body>
+</html>

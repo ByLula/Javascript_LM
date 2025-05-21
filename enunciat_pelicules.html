@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pelis</title>
+  <style>
+    /* Estils CSS per a la pàgina */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+    /* Estil per a la secció de cerca */
+    .cerca {
+      background-color: #f1f1f1;
+  padding: 20px;
+    }
+    /* Diseny de la graella */
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    /* Estil per a les targetes de pel·lícules */
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: scale(1.02);
+    }
+    .card img {
+      width: 100%;
+      height: auto;
+    }
+    .targeta {
+      padding: 15px;
+    }
+    .targeta-titol {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .targeta-info {
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Secció de cerca i títol -->
+  <div class="cerca">
+    <h1 style="text-align:center; padding: 20px 0;">Col·leció de pel·lícules</h1>    
+    <input type="text" id="cerca" name="Cerca" title="Terme de cerca" required><br>
+    <button type="button" onclick="funcio()">Cerca</button>
+  </div>
+  <!-- Per mostrar les targetes -->
+  <div class="container" id="film-container"></div>
+  <!-- Incloure el fitxer JavaScript amb les pel·lícules -->
+  <script src="infopelis.js"></script>
+  <script>
+  /////////////////////// Fiqueu el vostre codi aquí ////////////////////////
+  // Definició de les pel·lícules
+    function crearTargetes(filmsToShow) {
+      const container = document.getElementById("film-container");
+      container.innerHTML = "";
+      //Creació de les targetes
+      filmsToShow.forEach(film => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const contingut = `
+          <div class="targeta">
+            <div class="targeta-titol">${film.name}</div>
+            <div class="targeta-info"><strong>Year:</strong> ${film.year}</div>
+            <div class="targeta-info"><strong>Style:</strong> ${film.style}</div>
+            <div class="targeta-info"><strong>Director:</strong> ${film.director}</div>
+            <div class="targeta-info"><strong>Actors:</strong> ${film.actors.join(", ")}</div>
+            <div class="targeta-info"><strong>Oscars:</strong> ${film.oscars}</div>
+          </div>
+        `;
+        card.innerHTML = contingut;
+        container.appendChild(card);
+      });
+    }
+    // Filtrar pel·lícules per nom, any, estil, director o actors
+    function funcio() {
+      const input = document.getElementById("cerca").value.toLowerCase();
+      // Filtrar els resultats
+      const resultats = films.filter(film => {
+        return Object.values(film).some(value => {
+          if (Array.isArray(value)) {
+            return value.some(v => v.toLowerCase().includes(input));
+          }
+          return value.toString().toLowerCase().includes(input);
+        });
+      });
+      // Mostrar els resultats
+      crearTargetes(input === "" ? films : resultats);
+    }
+    // Inicialitzar la pàgina amb totes les pel·lícules
+     window.onload = () => crearTargetes(films);
+  ///////////////////////////////////////////////////////////////////////////
+
+  </script>
+
+</body>
+</html>
